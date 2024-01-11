@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: synconme
+  namespace: lamason
+  labels:
+    app.kubernetes.io/instance: lamason-synconme
+    app.kubernetes.io/name: helm-synconme
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: http
+      nodePort: 31766
+  selector:
+    app.kubernetes.io/instance: lamason-synconme
+    app.kubernetes.io/name: helm-synconme
+  clusterIP: 172.20.37.116
+  type: NodePort
+  externalTrafficPolicy: Cluster
