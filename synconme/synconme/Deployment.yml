@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: synconme
+  namespace: lamason
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: lamason-synconme
+      app.kubernetes.io/name: helm-synconme
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/instance: lamason-synconme
+        app.kubernetes.io/name: helm-synconme
+    spec:
+      containers:
+        - name: helm-synconme
+          image: 242202494099.dkr.ecr.us-east-2.amazonaws.com/lamason/synconme:latest
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: synconme
+                  key: DB_DATABASE
+            - name: APP_KEY
+              value: base64:x6TfBXMNVRlKwPOwkv3g938Pzky6vSMAoo8bsAZOr80=
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: sql
+                  key: endpoint
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: synconme
+                  key: DB_USERNAME
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: synconme
+                  key: DB_PASSWORD
